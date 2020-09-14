@@ -28,7 +28,7 @@ app.post('/messages', (req, res) => {
     .then(message => {
       res.status(201).json(message)
     }).catch(error => {
-      res.status(400).json(error)
+      res.status(400).json(error) 
     }) 
 })
 

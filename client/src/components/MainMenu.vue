@@ -2,7 +2,7 @@
   <nav class="navbar is-dark">
     <div class="navbar-brand">
       <a class="navbar-item" href="#">
-        <strong>Message Board</strong>
+        <strong>Live a Message</strong>
       </a>
     </div>
     <div class="navbar-menu">
