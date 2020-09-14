@@ -1,6 +1,6 @@
 <template>
   <main>
-    <message-form />
+    <message-form v-on:messageSent="searchMessages()" />
     <div class="columns is-multiline is-mobile" style="margin-left: 12px;">
       <div class="column is-narrow" v-for="message in messages" :key="message._id">
         <div class="card message-card"
@@ -16,12 +16,23 @@
         </div>
       </div>
     </div>
+    <div class="columns is-centered is-mobile">
+      <div class="column is-half">
+        <section class="section" v-if="!messages || messages.length <= 0">
+          <div class="content has-text-grey has-text-centered">
+            <p><b-icon pack="far" icon="sad-tear" size="is-large"/></p>
+            <p style="font-size: 20px;">Nobody left messages</p>
+          </div>
+        </section>
+      </div>
+    </div>
   </main>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios'
 
+import { Message } from '../models/message.model'
+import { MessageClient } from '../client/message.client'
 import MessageForm from './MessageForm.vue'
 
 @Component({
@@ -30,13 +41,23 @@ import MessageForm from './MessageForm.vue'
   }
 })
 export default class Home extends Vue {
-  private readonly API_URL = 'http://localhost:3000/messages'
-  private messages = []
+  private messageClient!: MessageClient
+  private messages: Message[] = []
+
+  private created(): void {
+    this.messageClient = new MessageClient()
+  }
   
   private mounted(): void {
-    axios.get(this.API_URL)
-      .then(response => {
-        this.messages = response.data
+    this.searchMessages()
+  }
+
+  private searchMessages(): void {
+    this.messageClient.findAll()
+      .then(result => {
+        this.messages = result.data
+      }).catch(error => {
+        console.log(error)
       })
   }
 }

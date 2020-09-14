@@ -30,13 +30,12 @@
             icon="user"
             icon-pack="fas"
             v-model="message.username"
-            placeholder="Author"/>
+            placeholder="Author | Publisher"/>
         </b-field>
       </validation-provider>
     </div>
     <div class="column is-narrow">
       <validation-provider
-        rules="url"
         v-slot="{ errors, valid }"
         name="imageUrl">
         <b-field
@@ -64,7 +63,7 @@
             icon="comments"
             icon-pack="fas"
             v-model="message.message"
-            placeholder="Take a deep breath and live a message here... Press enter to deliver."/>
+            placeholder="Take a deep breath and live a message here..."/>
         </b-field>
       </validation-provider>
     </div>
@@ -76,20 +75,43 @@
   </validation-observer>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios'
+import { Component, Vue } from 'vue-property-decorator'
+
+import { Message } from '../models/message.model'
+import { MessageClient } from '../client/message.client'
 
 @Component
 export default class MessageForm extends Vue {
-  private message: { subject: string; message: string; username: string; imageUrl: string } = {
-    subject: '',
-    message: '',
-    username: '',
-    imageUrl: ''
+  private message: Message = new Message()
+  private messageClient!: MessageClient
+
+  private created(): void {
+    this.messageClient = new MessageClient()    
   }
 
   private sendMessage(): void {
-    alert('TODO: send message!')
+    this.messageClient.save(this.message)
+      .then(response => {
+        if (response.data) {
+          this.$buefy.toast.open({
+            message: 'Message sent!',
+            position: 'is-bottom',
+            type: 'is-success'
+          })
+          this.$emit('messageSent')
+          this.clearForm()
+        }
+      }).catch(error => {
+        this.clearForm()
+        console.log(error)
+      })
+  }
+  
+  private async clearForm() {
+    this.message.message = ''
+    this.message.username = ''
+    this.message.imageUrl = ''
+    this.message.subject = ''
   }
 }
 </script>

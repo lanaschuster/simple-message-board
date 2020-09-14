@@ -1,16 +1,9 @@
 <template>
-  <nav class="navbar is-dark">
+  <nav class="navbar is-black">
     <div class="navbar-brand">
       <a class="navbar-item" href="#">
-        <strong>Live a Message</strong>
+        <strong class="logo">Live a Message</strong>
       </a>
-    </div>
-    <div class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item " href="#">
-          Home
-        </a>
-      </div>
     </div>
   </nav>
 </template>
@@ -21,3 +14,8 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component
 export default class MainMenu extends Vue {}
 </script>
+<style>
+.logo {
+  font-family: 'Rock Salt', cursive;
+}
+</style>
